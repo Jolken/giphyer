@@ -1,3 +1,11 @@
 package dev.jolken.giphyer.models.giphy
 
-data class Meta (val msg:String, val status: Int, val response_id: String)
+import com.google.gson.annotations.SerializedName
+
+data class Meta (
+    @SerializedName("msg")
+    val message:String,
+    val status: Int,
+    @SerializedName("response_id")
+    val responseId: String
+    )

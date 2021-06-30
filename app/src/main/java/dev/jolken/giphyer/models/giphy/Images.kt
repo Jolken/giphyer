@@ -1,7 +1,11 @@
 package dev.jolken.giphyer.models.giphy
 
+import com.google.gson.annotations.SerializedName
+
 data class Images(
-    val preview_gif: PreviewGifImage,
+    @SerializedName("preview_gif")
+    val previewGif: PreviewGifImage,
     val original: OriginalImage,
-    val downsized_small: DownsizedSmallImage
+    @SerializedName("downsized_small")
+    val downsizedSmall: DownsizedSmallImage
 )

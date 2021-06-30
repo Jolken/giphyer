@@ -1,4 +1,4 @@
-package dev.jolken.giphyer.ui.main
+package dev.jolken.giphyer.models.viewmodels
 
 import androidx.lifecycle.ViewModel
 

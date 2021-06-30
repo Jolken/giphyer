@@ -1,10 +1,11 @@
-package dev.jolken.giphyer
+package dev.jolken.giphyer.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import dev.jolken.giphyer.ui.main.MainFragment
-import dev.jolken.giphyer.ui.main.MainViewModel
+import dev.jolken.giphyer.R
+import dev.jolken.giphyer.fragments.MainFragment
+import dev.jolken.giphyer.models.viewmodels.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 

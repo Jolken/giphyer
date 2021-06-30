@@ -1,6 +1,5 @@
-package dev.jolken.giphyer.ui.main
+package dev.jolken.giphyer.fragments
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import dev.jolken.giphyer.R
+import dev.jolken.giphyer.models.viewmodels.MainViewModel
 
 class MainFragment : Fragment() {
 

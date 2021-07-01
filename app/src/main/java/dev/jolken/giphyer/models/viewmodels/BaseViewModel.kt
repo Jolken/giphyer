@@ -3,14 +3,12 @@ package dev.jolken.giphyer.models.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.jolken.giphyer.models.responses.GiphyResponse
 import dev.jolken.giphyer.network.GiphyApi
 import dev.jolken.giphyer.network.NetworkService
 import dev.jolken.giphyer.utils.Event
 import dev.jolken.giphyer.utils.toKotlinError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Call
 import retrofit2.Response
 
 abstract class BaseViewModel : ViewModel() {

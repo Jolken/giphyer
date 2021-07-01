@@ -2,11 +2,16 @@ package dev.jolken.giphyer.models.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dev.jolken.giphyer.models.giphy.Gif
 import dev.jolken.giphyer.models.requests.SearchRequest
 import dev.jolken.giphyer.models.requests.TrendingRequest
 import dev.jolken.giphyer.utils.Event
 import dev.jolken.giphyer.utils.Status
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MainViewModel : BaseViewModel() {
     val gifsList = MutableLiveData<Event<MutableList<Gif>>>()
@@ -51,5 +56,22 @@ class MainViewModel : BaseViewModel() {
             }
         }
     }
+
+    fun loadFakeGifs() {
+        this.viewModelScope.launch(Dispatchers.IO){
+            runBlocking {
+                delay(1000)
+
+                gifsList.postValue(Event(
+                    Status.SUCCESS,
+                    gifsList.value?.data?.apply {
+                        this.addAll((0..20).map { Gif.GetFakeGif() } ) //добавляем в список гифки
+                    } ?: (0..20).map { Gif.GetFakeGif() }.toMutableList()
+
+                    , null))
+            }
+            }
+        }
+
 
 }

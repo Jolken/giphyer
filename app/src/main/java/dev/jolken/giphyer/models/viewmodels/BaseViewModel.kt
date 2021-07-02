@@ -69,7 +69,16 @@ abstract class BaseViewModel : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 launch(Dispatchers.Main) {
-                    callback(Event.error(null))
+                    when (e) {
+                        is java.net.UnknownHostException -> {
+                            callback(Event.error(Error("No internet connection")))
+
+                        }
+                        else -> {
+                            callback(Event.error(null))
+
+                        }
+                    }
                 }
             }
         }

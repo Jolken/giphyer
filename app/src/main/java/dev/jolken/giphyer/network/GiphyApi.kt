@@ -7,21 +7,15 @@ import dev.jolken.giphyer.models.responses.SearchResponse
 import dev.jolken.giphyer.models.responses.TrendingResponse
 import dev.jolken.giphyer.models.responses.GetGifByIdResponse
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface GiphyApi {
-    @FormUrlEncoded
     @GET("search")
-    suspend fun getSearch(@Body body: SearchRequest): Response<SearchResponse>
+    suspend fun getSearch(@QueryMap body: Map<String,String>): Response<SearchResponse>
 
-    @FormUrlEncoded
     @GET("trending")
-    suspend fun getTrending(@Body body: TrendingRequest):Response<TrendingResponse>
+    suspend fun getTrending(@QueryMap body: Map<String,String>):Response<TrendingResponse>
 
-    @FormUrlEncoded
     @GET("{id}}")
     suspend fun getGifById(@Path("id") id: String, @Body body: GetGifByIdRequest):Response<GetGifByIdResponse>
 }

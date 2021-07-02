@@ -8,6 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object NetworkService {
     private const val BASE_URL = "https://api.giphy.com/v1/gifs/"
+//    private const val BASE_URL = "https://webhook.site/25bbca29-4259-4228-80f3-43240e90eecf/"
 
     private val baseInterceptor: Interceptor = invoke { chain ->
         val newUrl = chain

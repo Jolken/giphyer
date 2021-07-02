@@ -4,19 +4,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import dev.jolken.giphyer.R
 import dev.jolken.giphyer.models.giphy.Gif
 import dev.jolken.giphyer.utils.Event
+import dev.jolken.giphyer.utils.pxToDp
 
-class GifRecyclerViewAdapter(private val gifs: MutableLiveData<Event<MutableList<Gif>>>) :
-    RecyclerView.Adapter<GifRecyclerViewAdapter.GifViewHolder>() {
+class GifRecyclerViewAdapter(
+    private val gifs: MutableLiveData<Event<MutableList<Gif>>>,
+    val onItemClickListener: (gif: Gif, position: Int) -> Unit
+) : RecyclerView.Adapter<GifRecyclerViewAdapter.GifViewHolder>() {
+
 
     class GifViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.gifImageView)
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GifViewHolder {
@@ -27,8 +30,13 @@ class GifRecyclerViewAdapter(private val gifs: MutableLiveData<Event<MutableList
     override fun onBindViewHolder(holder: GifViewHolder, position: Int) {
         val gif = gifs.value?.data?.get(position) ?: return
 
-        holder.imageView.layoutParams.width = gif.images.previewGif.width.toInt()
-        holder.imageView.layoutParams.height = gif.images.previewGif.height.toInt()
+
+        holder.imageView.layoutParams.width = holder.itemView.context.pxToDp(gif.images.previewGif.width.toIntOrNull() ?: 100)
+        holder.imageView.layoutParams.height = holder.itemView.context.pxToDp(gif.images.previewGif.height.toIntOrNull() ?: 200)
+        holder.imageView.setOnClickListener {
+            onItemClickListener(gifs.value?.data?.get(position) ?: return@setOnClickListener, position)
+        }
+        Glide.with(holder.itemView).asGif().load(gif.images.previewGif.url).into(holder.imageView)
 
     }
 

@@ -7,6 +7,7 @@ import dev.jolken.giphyer.models.giphy.Gif
 import dev.jolken.giphyer.models.requests.SearchRequest
 import dev.jolken.giphyer.models.requests.TrendingRequest
 import dev.jolken.giphyer.utils.Event
+import dev.jolken.giphyer.utils.SingleLiveEvent
 import dev.jolken.giphyer.utils.Status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -14,30 +15,41 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class MainViewModel : BaseViewModel() {
+    private var query = ""
+    private var isTrending = true
     val gifsList = MutableLiveData<Event<MutableList<Gif>>>()
-    val selectedGif = MutableLiveData<Gif>()
-    val searchInputText = MutableLiveData<String>()
+    val selectedGif = SingleLiveEvent<Gif>()
+    val isLoadingGifs = MutableLiveData<Boolean>(false)
+    val clickedGifPosition = MutableLiveData<Int>(0)
     val errorMessage = MutableLiveData<String>()
-    val requestGetGifsOffset = MutableLiveData<Int>()
 
-    fun loadGifs() {
+
+    fun loadGifs(inputQuery: String? = null) {
+        if (inputQuery != null) {
+            if (query != inputQuery) gifsList.value?.data?.clear()
+            query = inputQuery
+            isTrending = false
+        }
         requestWithCallback({
-            if (searchInputText.value != null && searchInputText.value?.length == 0) {
+
+            isLoadingGifs.postValue(true)
+
+            if (isTrending) {
                 api.getTrending(
                     TrendingRequest(
                         API_KEY,
-                        20,
-                        requestGetGifsOffset.value ?: 0
-                    )
+                        25,
+                        gifsList.value?.data?.size ?: 0
+                    ).toMap()
                 )
             } else {
                 api.getSearch(
                     SearchRequest(
                         API_KEY,
-                        searchInputText.value ?: "",
-                        20,
-                        requestGetGifsOffset.value ?: 0
-                    )
+                        query,
+                        25,
+                        gifsList.value?.data?.size ?: 0
+                    ).toMap()
                 )
             }
         })
@@ -50,28 +62,46 @@ class MainViewModel : BaseViewModel() {
                     gifsList.value = Event(
                         it.status,
                         gifsList.value?.data?.apply {
-                        if (it.data?.data != null) this.addAll(it.data.data) //добавляем в список гифки
-                    }, null)
+                            if (it.data?.data != null) this.addAll(it.data.data) //добавляем в список гифки
+                        } ?: it.data?.data?.toMutableList() ?: mutableListOf<Gif>()
+                        , null
+                    )
                 }
             }
+            isLoadingGifs.postValue(false)
         }
     }
 
     fun loadFakeGifs() {
-        this.viewModelScope.launch(Dispatchers.IO){
+        isLoadingGifs.postValue(true)
+        this.viewModelScope.launch(Dispatchers.IO) {
             runBlocking {
                 delay(1000)
 
                 gifsList.postValue(Event(
-                    Status.SUCCESS,
-                    gifsList.value?.data?.apply {
-                        this.addAll((0..20).map { Gif.GetFakeGif() } ) //добавляем в список гифки
-                    } ?: (0..20).map { Gif.GetFakeGif() }.toMutableList()
+                        Status.SUCCESS,
+                        gifsList.value?.data?.apply {
+                            this.addAll((0..20).map { Gif.GetFakeGif() }) //добавляем в список гифки
+                        } ?: (0..20).map { Gif.GetFakeGif() }.toMutableList(), null
+                    )
+                )
 
-                    , null))
-            }
+                isLoadingGifs.postValue(false)
             }
         }
+    }
+
+    fun setSelectedGif(gif: Gif) {
+        this.selectedGif.postValue(gif)
+    }
+
+    fun setIsTrending(b: Boolean) {
+        this.isTrending = b;
+        if (isTrending) {
+            gifsList.value?.data?.clear()
+            loadGifs()
+        }
+    }
 
 
 }

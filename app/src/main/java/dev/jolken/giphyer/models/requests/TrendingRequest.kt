@@ -7,4 +7,8 @@ data class TrendingRequest(
     val limit: Int,
     val offset: Int
 
-): BaseGiphyRequest
+): BaseGiphyRequest {
+    fun toMap(): Map<String, String> {
+        return mapOf("api_key" to apiKey, "limit" to limit.toString(), "offset" to offset.toString())
+    }
+}

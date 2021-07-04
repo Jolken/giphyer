@@ -21,7 +21,6 @@ class MainViewModel : BaseViewModel() {
     val selectedGif = SingleLiveEvent<Gif>()
     val isLoadingGifs = MutableLiveData<Boolean>(false)
     val clickedGifPosition = MutableLiveData<Int>(0)
-    val errorMessage = MutableLiveData<String>()
 
 
     fun loadGifs(inputQuery: String? = null) {
@@ -101,6 +100,9 @@ class MainViewModel : BaseViewModel() {
             gifsList.value?.data?.clear()
             loadGifs()
         }
+    }
+    fun setClickedGifPosition(position: Int) {
+        this.clickedGifPosition.postValue(position)
     }
 
 

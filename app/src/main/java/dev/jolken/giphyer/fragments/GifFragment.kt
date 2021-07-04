@@ -69,8 +69,8 @@ class GifFragment : Fragment() {
                 }
 
                 adapter = GifRecyclerViewAdapter(viewModel.gifsList) { gif, position ->
-                    viewModel.selectedGif.postValue(gif)
-                    viewModel.clickedGifPosition.value = position
+                    viewModel.setSelectedGif(gif)
+                    viewModel.setClickedGifPosition(position)
                 }
 
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {

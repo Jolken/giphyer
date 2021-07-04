@@ -21,7 +21,6 @@ import dev.jolken.giphyer.utils.hideKeyboard
 
 class MainFragment : Fragment() {
 
-
     val viewModel: MainViewModel by activityViewModels()
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
@@ -67,7 +66,7 @@ class MainFragment : Fragment() {
 
                 adapter = GifRecyclerViewAdapter(viewModel.gifsList) { gif, position ->
                     viewModel.setSelectedGif(gif)
-                    viewModel.clickedGifPosition.value = position
+                    viewModel.setClickedGifPosition(position)
                 }
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -109,29 +108,12 @@ class MainFragment : Fragment() {
             loadGifs()
         }
 
-
-
-
-
-
-
         return binding.root
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        // TODO: Use the ViewModel
     }
 
 }
